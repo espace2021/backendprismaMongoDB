@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model articles {
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  designation  String       @unique(map: "designation_1")
+  imageart     String
+  marque       String
+  prix         Float
+  qtestock     Int
+  reference    String       @unique(map: "reference_1")
+  scategorieID String       @db.ObjectId
+  scategories  scategories  @relation(fields: [scategorieID], references: [id])
+}
+
+model categories {
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  imagecategorie String
+  nomcategorie   String       @unique(map: "nomcategorie_1")
+  scategories    scategories[] 
+}
+
+model scategories {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  imagescategorie String
+  nomscategorie   String
+  categorieID     String
+  categories      categories  @relation(fields: [categorieID], references: [id])
+  articles        articles[]
+}
